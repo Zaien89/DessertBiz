@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울금융고 디저트경영과 - 메타버스 방탈출 체험</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Gowun Dodum', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #FAF5EF;
+            color: #4A3E3D;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            background: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border: 3px solid #E2D4C9;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background-color: #8C6A58;
+            color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Jua', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #FFF3EB;
+        }
+
+        .timer-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #E85A4F;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #E2D4C9;
+            height: 10px;
+        }
+
+        .progress-bar {
+            width: 10%;
+            height: 100%;
+            background-color: #D9822B;
+            transition: width 0.3s ease;
+        }
+
+        .content-body {
+            padding: 30px 25px;
+        }
+
+        .stage-tag {
+            display: inline-block;
+            background: #FFF0E6;
+            color: #D9822B;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            border: 1px solid #FFD8BE;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #332C2B;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .illustration-container {
+            width: 100%;
+            height: 240px;
+            background-color: #FFF8F0;
+            border: 2px dashed #E2D4C9;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: #FAFAFA;
+            border: 2px solid #EFEAE6;
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            color: #4A3E3D;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background-color: #FFF5EE;
+            border-color: #D9822B;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background-color: #FFEADB;
+            border-color: #D9822B;
+            font-weight: bold;
+        }
+
+        .action-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: #8C6A58;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .submit-btn {
+            background-color: #D9822B;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(217, 130, 43, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #B86B1D;
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-family: 'Jua', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-btn {
+            margin-top: 18px;
+            background-color: #8C6A58;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .start-screen, .ending-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .start-title {
+            font-family: 'Jua', sans-serif;
+            font-size: 2.2rem;
+            color: #8C6A58;
+            margin-bottom: 15px;
+        }
+
+        .start-desc {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #665A59;
+            margin-bottom: 30px;
+        }
+
+        .start-btn {
+            background-color: #D9822B;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(217, 130, 43, 0.4);
+        }
+
+        /* SVG Illustratons */
+        .svg-illustration {
+            width: 100%;
+            height: 100%;
+            max-height: 220px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="header">
+        <h1>🍰 서울금융고 디저트경영과 방탈출</h1>
+        <p style="font-size: 0.85rem; opacity: 0.9;">10분 안에 10개의 과제를 해결하고 탈출하세요!</p>
+        <div class="timer-badge" id="timer">10:00</div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="start-screen">
+        <h2 class="start-title">메타버스 디저트 실습실의 비밀</h2>
+        <p class="start-desc">
+            서울금융고등학교 디저트경영과 입학설명회에 온 당신!<br>
+            갑자기 신상 디저트 실습실 문이 잠겨버렸습니다.<br>
+            실습실 곳곳의 10개 퀴즈를 해결하고 **디저트 마스터 열쇠**를 획득하세요!
+        </p>
+        <div style="margin-bottom: 30px;">
+            <svg class="svg-illustration" viewBox="0 0 400 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="400" height="180" rx="15" fill="#FFF8F0"/>
+                <path d="M140 140 H260 V90 Q260 60 200 60 Q140 60 140 90 Z" fill="#EAD5C3" stroke="#8C6A58" stroke-width="4"/>
+                <circle cx="200" cy="110" r="12" fill="#D9822B"/>
+                <path d="M190 60 Q200 30 210 60" stroke="#E85A4F" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="200" cy="25" r="10" fill="#E85A4F"/>
+                <text x="200" y="165" text-anchor="middle" fill="#8C6A58" font-size="14" font-weight="bold">서울금융고 디저트경영과 메타버스</text>
+            </svg>
+        </div>
+        <button class="start-btn" onclick="startGame()">방탈출 시작하기 🔑</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="content-body" style="display: none;">
+        <div class="stage-tag" id="stage-tag">STAGE 1 / 10</div>
+        <div class="question-title" id="question-text">질문이 여기에 표시됩니다.</div>
+        
+        <div class="illustration-container" id="illustration-box">
+            <!-- SVG Illustraton injects here -->
+        </div>
+
+        <div class="options-grid" id="options-box">
+            <!-- Options inject here -->
+        </div>
+
+        <div class="action-area">
+            <button class="hint-btn" onclick="showHint()">💡 힌트 보기</button>
+            <button class="submit-btn" onclick="checkAnswer()">정답 제출 ➔</button>
+        </div>
+    </div>
+
+    <!-- Ending Screen -->
+    <div id="ending-screen" class="ending-screen" style="display: none;">
+        <h2 class="start-title" style="color: #4CAF50;">🎉 탈출 성공! 축하합니다!</h2>
+        <p class="start-desc">
+            모든 퀴즈를 맞히고 **디저트경영과 마스터**로 인정받았습니다.<br>
+            서울금융고등학교 디저트경영과에서 당신의 달콤한 꿈을 펼쳐보세요!
+        </p>
+        <div style="background: #FFF8F0; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 2px dashed #D9822B;">
+            <h3 style="color: #8C6A58; margin-bottom: 10px;">📋 나의 학과체험 요약 리포트</h3>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: #555;">
+                • **특색**: 제과제빵과 마케팅/경영을 함께 배우는 융합 교육과정<br>
+                • **최신 시설**: 1기 신입생을 위한 최첨단 제과제빵·바리스타 실습실<br>
+                • **진로**: 카페 창업, 푸드크리에이터, 제과제빵사, 마케터 및 대학 진학
+            </p>
+        </div>
+        <button class="start-btn" onclick="location.reload()">다시 도전하기 🔄</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="hint-modal">
+    <div class="modal-content">
+        <h3 class="modal-title" style="color: #D9822B;">💡 힌트</h3>
+        <p id="hint-text" style="margin-top: 10px; color: #555; line-height: 1.5;"></p>
+        <button class="modal-btn" onclick="closeModal()">확인</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            stage: "STAGE 1",
+            question: "Q1. [학과 특색] 서울금융고 디저트경영과가 다른 학교 제과제빵과와 차별화되는 가장 큰 특징은 무엇일까요?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <!-- Cake -->
+                    <path d="M80 140 H180 V100 H80 Z" fill="#F4A261"/>
+                    <path d="M80 100 H180 V80 H80 Z" fill="#E76F51"/>
+                    <circle cx="100" cy="80" r="8" fill="#E85A4F"/>
+                    <circle cx="130" cy="80" r="8" fill="#E85A4F"/>
+                    <circle cx="160" cy="80" r="8" fill="#E85A4F"/>
+                    <text x="130" y="170" text-anchor="middle" fill="#8C6A58" font-size="13" font-weight="bold">제과제빵 기술</text>
+                    <!-- Plus -->
+                    <text x="200" y="120" text-anchor="middle" fill="#D9822B" font-size="30" font-weight="bold">+</text>
+                    <!-- Marketing Chart -->
+                    <rect x="230" y="70" width="100" height="70" rx="8" fill="#FFFFFF" stroke="#8C6A58" stroke-width="3"/>
+                    <path d="M250 120 L270 100 L290 110 L310 85" stroke="#2A9D8F" stroke-width="4" stroke-linecap="round"/>
+                    <text x="280" y="170" text-anchor="middle" fill="#8C6A58" font-size="13" font-weight="bold">마케팅 & 경영</text>
+                  </svg>`,
+            options: [
+                "① 오직 제과 실기시험 문제만 반복 연습한다.",
+                "② 제과제빵 실무 분야와 마케팅/경영 분야를 함께 배운다.",
+                "③ 외국어 수업만 전담으로 진행한다.",
+                "④ 수학 및 과학 이론 수업 위주로 배운다."
+            ],
+            answer: 1,
+            hint: "브로셔에 따르면 '제과제빵분야 & 마케팅 분야 2가지 교육과정 편성'이 가장 큰 차별점입니다!"
+        },
+        {
+            stage: "STAGE 2",
+            question: "Q2. [코스 구분] '디저트 & 카페 창업가', '디저트 상품 기획자'를 꿈꾸는 학생에게 적합한 코스는?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <rect x="70" y="50" width="120" height="100" rx="10" fill="#FFFFFF" stroke="#D9822B" stroke-width="3"/>
+                    <text x="130" y="90" text-anchor="middle" fill="#D9822B" font-size="14" font-weight="bold">디저트</text>
+                    <text x="130" y="110" text-anchor="middle" fill="#D9822B" font-size="14" font-weight="bold">마케팅 코스</text>
+                    <rect x="210" y="50" width="120" height="100" rx="10" fill="#FFFFFF" stroke="#8C6A58" stroke-width="3"/>
+                    <text x="270" y="90" text-anchor="middle" fill="#8C6A58" font-size="14" font-weight="bold">디저트</text>
+                    <text x="270" y="110" text-anchor="middle" fill="#8C6A58" font-size="14" font-weight="bold">개발 코스</text>
+                  </svg>`,
+            options: [
+                "① 디저트 마케팅 코스",
+                "② 디저트 개발 코스",
+                "③ 호텔 조리 코스",
+                "④ IT 데이터 분석 코스"
+            ],
+            answer: 0,
+            hint: "창업과 상품 기획은 '마케팅 코스'의 주요 목표 분야입니다."
+        },
+        {
+            stage: "STAGE 3",
+            question: "Q3. [교육과정] 1학년 교육과정에 포함되어 기초를 다지는 과목이 아닌 것은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <circle cx="200" cy="100" r="60" fill="#E2D4C9"/>
+                    <text x="200" y="95" text-anchor="middle" fill="#8C6A58" font-size="16" font-weight="bold">1학년 교과목</text>
+                    <text x="200" y="120" text-anchor="middle" fill="#555" font-size="12">식품과영양 / 디저트조리 등</text>
+                  </svg>`,
+            options: [
+                "① 식품과 영양",
+                "② 디저트조리",
+                "③ 식음료기초",
+                "④ AI마케팅콘텐츠제작 (2학년)"
+            ],
+            answer: 3,
+            hint: "AI마케팅콘텐츠제작 과목은 2학년 교육과정에 편성되어 있습니다."
+        },
+        {
+            stage: "STAGE 4",
+            question: "Q4. [실습 환경] 신입생들이 사용할 실습실 환경에 대한 설명 중 올바른 것은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <rect x="100" y="40" width="200" height="120" rx="10" fill="#E8D8CE" stroke="#8C6A58" stroke-width="3"/>
+                    <text x="200" y="90" text-anchor="middle" fill="#8C6A58" font-size="16" font-weight="bold">✨ 최신 실습실 구축 ✨</text>
+                    <text x="200" y="120" text-anchor="middle" fill="#333" font-size="13">제과제빵실 & 바리스타실</text>
+                  </svg>`,
+            options: [
+                "① 인근 다른 학교 실습실을 빌려서 사용한다.",
+                "② 1기 신입생을 위해 구축된 최신 실습실을 1등으로 사용한다.",
+                "③ 이론 수업만 하고 실습실은 사용하지 않는다.",
+                "④ 3학년이 되어서야 처음 실습실에 들어갈 수 있다."
+            ],
+            answer: 1,
+            hint: "디저트경영과는 최신 제과제빵실과 바리스타실을 구축하여 1기 신입생이 직접 사용하게 됩니다."
+        },
+        {
+            stage: "STAGE 5",
+            question: "Q5. [나눔과 실무] 수업 및 방과후 활동으로 만든 제빵·쿠키의 주요 활용 활동은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <path d="M200 150 C150 150 120 110 120 80 C120 50 150 40 200 80 C250 40 280 50 280 80 C280 110 250 150 200 150 Z" fill="#E85A4F"/>
+                    <text x="200" y="95" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="bold">판매 & 기부 봉사</text>
+                  </svg>`,
+            options: [
+                "① 모형만 만들고 전량 폐기한다.",
+                "② 직접 판매해보고 수익금 기부 및 지역아동센터·요양원 봉사활동을 진행한다.",
+                "③ 선생님들만 시식하고 평가한다.",
+                "④ 해외로 무조건 수출한다."
+            ],
+            answer: 1,
+            hint: "디저트경영과 학생들은 만든 제과제빵을 판매해 수익금을 기부하고, 지역사회 봉사활동도 진행합니다."
+        },
+        {
+            stage: "STAGE 6",
+            question: "Q6. [자격증] 디저트경영과에서 취득 가능한 마케팅/경영 분야 자격증이 아닌 것은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <rect x="120" y="40" width="160" height="120" rx="8" fill="#FFFFFF" stroke="#2A9D8F" stroke-width="3"/>
+                    <circle cx="200" cy="80" r="20" fill="#2A9D8F"/>
+                    <text x="200" y="85" text-anchor="middle" fill="#FFF" font-size="12">PASS</text>
+                    <text x="200" y="130" text-anchor="middle" fill="#2A9D8F" font-size="14" font-weight="bold">자격증 취득</text>
+                  </svg>`,
+            options: [
+                "① SMAT (서비스경영자격)",
+                "② 검색광고마케터 및 SNS마케팅전문가",
+                "③ 자동차운전면허증 1종 대형",
+                "④ 마케팅기획전문가"
+            ],
+            answer: 2,
+            hint: "운전면허는 학과 전문 자격증에 포함되지 않습니다!"
+        },
+        {
+            stage: "STAGE 7",
+            question: "Q7. [창업 역량] 카페 창업 수업에서 제공되는 특별 프로그램은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <path d="M150 160 L200 40 L250 160 Z" fill="#EAD5C3"/>
+                    <circle cx="200" cy="90" r="25" fill="#D9822B"/>
+                    <text x="200" y="95" text-anchor="middle" fill="#FFF" font-size="12" font-weight="bold">명장/기능장</text>
+                    <text x="200" y="180" text-anchor="middle" fill="#8C6A58" font-size="13" font-weight="bold">전문가 특강</text>
+                  </svg>`,
+            options: [
+                "① 명장 및 기능장 초청 특강을 통한 전문 역량 강화",
+                "② 외부 일일 노동 현장 투입",
+                "③ 컴퓨터 게임 창업 교육",
+                "④ 단순 청소 방법 실습"
+            ],
+            answer: 0,
+            hint: "대한민국 명장, 기능장 특강을 통해 학생들의 전문 역량을 강화합니다."
+        },
+        {
+            stage: "STAGE 8",
+            question: "Q8. [취업 지원] 서울시교육청 F&B 사업과 연계되어 참여하는 기업 예시로 맞지 않는 것은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <rect x="80" y="60" width="240" height="80" rx="10" fill="#FFFFFF" stroke="#8C6A58" stroke-width="3"/>
+                    <text x="200" y="95" text-anchor="middle" fill="#8C6A58" font-size="15" font-weight="bold">서울시교육청 F&B 취업 연계</text>
+                    <text x="200" y="120" text-anchor="middle" fill="#E85A4F" font-size="12">CJ푸드빌 / 현대그린푸드 등</text>
+                  </svg>`,
+            options: [
+                "① CJ푸드빌",
+                "② 현대그린푸드",
+                "③ 백미당",
+                "④ NASA 우주항공국"
+            ],
+            answer: 3,
+            hint: "우주항공국은 F&B(식음료) 취업 연계 기업이 아닙니다."
+        },
+        {
+            stage: "STAGE 9",
+            question: "Q9. [진학 지원] 디저트경영과 졸업 후 진학할 수 있는 주요 연계 대학 전공은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <path d="M120 140 L200 70 L280 140 Z" fill="#2A9D8F"/>
+                    <rect x="150" y="140" width="100" height="40" fill="#E2D4C9"/>
+                    <text x="200" y="115" text-anchor="middle" fill="#FFF" font-size="14" font-weight="bold">UNIVERSITY</text>
+                  </svg>`,
+            options: [
+                "① 경희대 조리&푸드디자인과, 백석예대 디저트카페전공 등",
+                "② 의과대학 및 치의학과",
+                "③ 법학전문대학원",
+                "④ 조선해양공학과"
+            ],
+            answer: 0,
+            hint: "경희대, 우송대, 백석예대, 수원여대 등 다양한 제과제빵/디저트 관련 학과로 진학이 가능합니다."
+        },
+        {
+            stage: "STAGE 10",
+            question: "Q10. [마지막 열쇠] 서울금융고 디저트경영과의 슬로건으로 가장 적절한 것은?",
+            svg: `<svg class="svg-illustration" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="200" fill="#FFF8F0"/>
+                    <circle cx="200" cy="100" r="50" fill="#E85A4F"/>
+                    <text x="200" y="95" text-anchor="middle" fill="#FFF" font-size="14" font-weight="bold">달콤한 꿈을</text>
+                    <text x="200" y="115" text-anchor="middle" fill="#FFF" font-size="14" font-weight="bold">현실로!</text>
+                  </svg>`,
+            options: [
+                "① 달콤한 꿈을 현실로, 나만의 디저트 카페를 디자인하다!",
+                "② 무조건 기계처럼 조리만 하자!",
+                "③ 공부는 필요 없고 놀기만 하자!",
+                "④ 디저트보다는 로봇을 개발하자!"
+            ],
+            answer: 0,
+            hint: "디저트경영과의 핵심 슬로건입니다!"
+        }
+    ];
+
+    let currentStage = 0;
+    let selectedOption = null;
+    let timerInterval = null;
+    let timeLeft = 600; // 10 minutes
+
+    function startGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        loadStage();
+        startTimer();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let min = Math.floor(timeLeft / 60);
+            let sec = timeLeft % 60;
+            document.getElementById('timer').innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("⏰ 제한시간 10분이 지났습니다! 다시 도전해보세요.");
+                location.reload();
+            }
+        }, 1000);
+    }
+
+    function loadStage() {
+        selectedOption = null;
+        let data = quizData[currentStage];
+        document.getElementById('stage-tag').innerText = `${data.stage} / 10`;
+        document.getElementById('question-text').innerText = data.question;
+        document.getElementById('illustration-box').innerHTML = data.svg;
+        
+        // Progress bar
+        document.getElementById('progress').style.width = `${((currentStage + 1) / 10) * 100}%`;
+
+        let optionsHtml = '';
+        data.options.forEach((opt, idx) => {
+            optionsHtml += `<button class="option-btn" onclick="selectOption(${idx})" id="opt-${idx}">${opt}</button>`;
+        });
+        document.getElementById('options-box').innerHTML = optionsHtml;
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        let buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, i) => {
+            if (i === idx) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+    }
+
+    function checkAnswer() {
+        if (selectedOption === null) {
+            alert("정답을 선택해주세요!");
+            return;
+        }
+
+        if (selectedOption === quizData[currentStage].answer) {
+            currentStage++;
+            if (currentStage < quizData.length) {
+                loadStage();
+            } else {
+                clearInterval(timerInterval);
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('ending-screen').style.display = 'block';
+            }
+        } else {
+            alert("❌ 틀렸습니다! 다시 생각해보거나 힌트를 참고하세요.");
+        }
+    }
+
+    function showHint() {
+        document.getElementById('hint-text').innerText = quizData[currentStage].hint;
+        document.getElementById('hint-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('hint-modal').style.display = 'none';
+    }
+</script>
+</body>
+</html>
